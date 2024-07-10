@@ -1,73 +1,80 @@
+def parse_input(user_input):
+    """
+    Parse user input into command and arguments.
+    """
+    parts = user_input.strip().split()
+    command = parts[0].lower() if parts else ''
+    args = parts[1:] if len(parts) > 1 else []
+    return command, args
+
 def add_contact(contacts, name, phone):
+    """
+    Add a new contact to the contacts dictionary.
+    """
     contacts[name] = phone
-    print("Contact added.")
+    return "Contact added."
 
 def change_contact(contacts, name, phone):
+    """
+    Change the phone number of an existing contact.
+    """
     if name in contacts:
         contacts[name] = phone
-        print("Contact updated.")
+        return "Contact updated."
     else:
-        print("Error: Contact not found.")
+        return "Error: contact not found."
 
 def show_phone(contacts, name):
+    """
+    Show the phone number of a contact.
+    """
     if name in contacts:
-        print(contacts[name])
+        return contacts[name]
     else:
-        print("Error: Contact not found.")
+        return "Error: contact not found."
 
 def show_all(contacts):
+    """
+    Show all contacts with their phone numbers.
+    """
     if contacts:
-        for name, phone in contacts.items():
-            print(f"{name}: {phone}")
+        return "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
     else:
-        print("No contacts found.")
-
-def parse_input(user_input):
-    parts = user_input.strip().split()
-    command = parts[0].lower()
-    args = parts[1:]
-    return command, args
+        return "No contacts found."
 
 def main():
     contacts = {}
-    print("Welcome to the assistant bot. Type 'help' to see the list of commands.")
-
     while True:
         user_input = input("> ")
         command, args = parse_input(user_input)
-
+        
         if command == "hello":
             print("How can I help you?")
-        elif command == "help":
-            print("Available commands:")
-            print("  hello")
-            print("  add [name] [phone]")
-            print("  change [name] [new phone]")
-            print("  phone [name]")
-            print("  all")
-            print("  exit or close")
         elif command == "add":
-            if len(args) != 2:
+            if len(args) == 2:
+                name, phone = args
+                print(add_contact(contacts, name, phone))
+            else:
                 print("Invalid command. Usage: add [name] [phone]")
-            else:
-                add_contact(contacts, args[0], args[1])
         elif command == "change":
-            if len(args) != 2:
-                print("Invalid command. Usage: change [name] [new phone]")
+            if len(args) == 2:
+                name, phone = args
+                print(change_contact(contacts, name, phone))
             else:
-                change_contact(contacts, args[0], args[1])
+                print("Invalid command. Usage: change [name] [phone]")
         elif command == "phone":
-            if len(args) != 1:
-                print("Invalid command. Usage: phone [name]")
+            if len(args) == 1:
+                name = args[0]
+                print(show_phone(contacts, name))
             else:
-                show_phone(contacts, args[0])
+                print("Invalid command. Usage: phone [name]")
         elif command == "all":
-            show_all(contacts)
-        elif command in ["exit", "close"]:
+            print(show_all(contacts))
+        elif command in ("close", "exit"):
             print("Good bye!")
             break
         else:
-            print("Invalid command. Type 'help' to see the list of commands.")
+            print("Invalid command.")
 
 if __name__ == "__main__":
     main()
